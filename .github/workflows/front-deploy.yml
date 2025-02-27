@@ -27,4 +27,4 @@ jobs:
             docker pull ddongu/hanbangbo-front:latest
 
             echo "🔥 Running new container..."
-            docker run -d --name hanbangbo-front -p 8000:8000 ddongu/hanbangbo-front:latest
+            docker run -d --name hanbangbo-front -p 8080:8080 ddongu/hanbangbo-front:latest
