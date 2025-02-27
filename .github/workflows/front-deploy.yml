@@ -2,7 +2,7 @@ name: Deploy to EC2
 
 on:
   repository_dispatch: # 다른 레포지토리에서 트리거 발생 시 실행
-    types: [deploy]
+    types: [front]
 
 jobs:
   deploy:
@@ -20,11 +20,11 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             echo "🛠️ Stopping & Removing old container..."
-            docker stop hanbangbo-back || true
-            docker rm hanbangbo-back || true
+            docker stop hanbangbo-front || true
+            docker rm hanbangbo-front || true
 
             echo "🚀 Pulling latest image from Docker Hub..."
-            docker pull ddongu/hanbangbo-back:latest
+            docker pull ddongu/hanbangbo-front:latest
 
             echo "🔥 Running new container..."
-            docker run -d --name hanbangbo-back -p 8000:8000 ddongu/hanbangbo-back:latest
+            docker run -d --name hanbangbo-front -p 8000:8000 ddongu/hanbangbo-front:latest
