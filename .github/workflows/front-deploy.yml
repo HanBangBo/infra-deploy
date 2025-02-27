@@ -23,8 +23,8 @@ jobs:
             cd ~/frontend
 
             echo "🔄 Pulling latest changes from Git..."
-            git checkout test
-            git pull origin test
+            git checkout ci-test
+            git pull origin ci-test
 
             echo "🛠️ Stopping & Removing old containers..."
             docker-compose down || true
