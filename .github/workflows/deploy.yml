@@ -1,30 +1,30 @@
-name: Deploy to EC2
+# name: Deploy to EC2
 
-on:
-  repository_dispatch: # 다른 레포지토리에서 트리거 발생 시 실행
-    types: [deploy]
+# on:
+#   repository_dispatch: # 다른 레포지토리에서 트리거 발생 시 실행
+#     types: [deploy]
 
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
+# jobs:
+#   deploy:
+#     runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout infra-deploy repository
-        uses: actions/checkout@v4
+#     steps:
+#       - name: Checkout infra-deploy repository
+#         uses: actions/checkout@v4
 
-      - name: Connect to EC2 and deploy
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USER }}
-          key: ${{ secrets.EC2_SSH_KEY }}
-          script: |
-            echo "🛠️ Stopping & Removing old container..."
-            docker stop hanbangbo-back || true
-            docker rm hanbangbo-back || true
+#       - name: Connect to EC2 and deploy
+#         uses: appleboy/ssh-action@master
+#         with:
+#           host: ${{ secrets.EC2_HOST }}
+#           username: ${{ secrets.EC2_USER }}
+#           key: ${{ secrets.EC2_SSH_KEY }}
+#           script: |
+#             echo "🛠️ Stopping & Removing old container..."
+#             docker stop hanbangbo-back || true
+#             docker rm hanbangbo-back || true
 
-            echo "🚀 Pulling latest image from Docker Hub..."
-            docker pull ddongu/hanbangbo-back:latest
+#             echo "🚀 Pulling latest image from Docker Hub..."
+#             docker pull ddongu/hanbangbo-back:latest
 
-            echo "🔥 Running new container..."
-            docker run -d --name hanbangbo-back -p 8000:8000 ddongu/hanbangbo-back:latest
+#             echo "🔥 Running new container..."
+#             docker run -d --name hanbangbo-back -p 8000:8000 ddongu/hanbangbo-back:latest
