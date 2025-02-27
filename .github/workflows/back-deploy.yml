@@ -1,7 +1,7 @@
-name: Deploy to EC2
+name: Deploy to EC2 using Git & Docker Compose
 
 on:
-  repository_dispatch: # 다른 레포지토리에서 트리거 발생 시 실행
+  repository_dispatch:
     types: [back]
 
 jobs:
@@ -12,19 +12,28 @@ jobs:
       - name: Checkout infra-deploy repository
         uses: actions/checkout@v4
 
-      - name: Connect to EC2 and deploy
+      - name: Connect to EC2 and Deploy
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            echo "🛠️ Stopping & Removing old container..."
-            docker stop hanbangbo-back || true
-            docker rm hanbangbo-back || true
+            echo "🔄 Navigating to project directory..."
+            cd ~/backend
 
-            echo "🚀 Pulling latest image from Docker Hub..."
-            docker pull ddongu/hanbangbo-back:latest
+            echo "🔄 Pulling latest changes from Git..."
+            git checkout main
+            git pull origin main
 
-            echo "🔥 Running new container..."
-            docker run -d --name hanbangbo-back -p 8000:8000 ddongu/hanbangbo-back:latest
+            echo "🛠️ Stopping & Removing old containers..."
+            docker-compose down || true
+
+            echo "🚀 Pulling latest images from Docker Hub..."
+            docker-compose pull
+
+            echo "🔥 Running new containers..."
+            docker-compose up -d --build
+
+            echo "🔍 Checking running containers..."
+            docker ps -a
